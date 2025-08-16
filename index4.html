@@ -1,0 +1,2141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#667eea" />
+  <title>Microfinance Tracker — Mobile App</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+      --border-radius: 16px;
+      --bottom-nav-height: 80px;
+      --header-height: 60px;
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --surface-color: #ffffff;
+      --background-color: #f8fafc;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--background-color);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding-top: var(--header-height);
+      padding-bottom: var(--bottom-nav-height);
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Telugu font support */
+    .telugu-text {
+      font-family: 'Noto Sans Telugu', 'Pothana2000', 'Vemana2000', sans-serif;
+    }
+
+    /* Mobile App Header */
+    .mobile-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--surface-color);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .mobile-header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .header-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+
+    .header-btn:active {
+      transform: scale(0.95);
+      background: rgba(102, 126, 234, 0.2);
+    }
+
+    /* Language Toggle Button */
+    .lang-toggle {
+      background: var(--primary-gradient);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 45px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .lang-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-height);
+      background: var(--surface-color);
+      border-top: 1px solid rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      border-radius: 12px;
+      margin: 0 4px;
+    }
+
+    .nav-item:active {
+      transform: scale(0.95);
+    }
+
+    .nav-item.active {
+      color: var(--primary-color);
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .nav-item i {
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+    }
+
+    .nav-item span {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile Container */
+    .mobile-container {
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Mobile Cards */
+    .mobile-card {
+      background: var(--surface-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .mobile-card-header {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1rem;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mobile-card-header h5 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .mobile-card-body {
+      padding: 1rem;
+    }
+
+    /* Step Badge */
+    .step-badge {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile Forms */
+    .mobile-form .form-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .mobile-form .form-control,
+    .mobile-form .form-select {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: var(--surface-color);
+    }
+
+    .mobile-form .form-control:focus,
+    .mobile-form .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    /* Mobile Buttons */
+    .mobile-btn {
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 48px;
+    }
+
+    .mobile-btn:active {
+      transform: scale(0.98);
+    }
+
+    .mobile-btn-primary {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .mobile-btn-secondary {
+      background: #f1f5f9;
+      color: var(--text-secondary);
+      border: 2px solid #e2e8f0;
+    }
+
+    .mobile-btn-danger {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    /* Mobile Table */
+    .mobile-table {
+      background: var(--surface-color);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    .mobile-table-item {
+      padding: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      transition: background 0.2s ease;
+    }
+
+    .mobile-table-item:last-child {
+      border-bottom: none;
+    }
+
+    .mobile-table-item:active {
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .mobile-table-item.paid {
+      background: rgba(16, 185, 129, 0.05);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .item-main {
+      flex: 1;
+    }
+
+    .item-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+    }
+
+    .item-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    /* Mobile Badge */
+    .mobile-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-badge-primary {
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary-color);
+    }
+
+    .mobile-badge-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success-color);
+    }
+
+    .mobile-badge-warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning-color);
+    }
+
+    .mobile-badge-secondary {
+      background: rgba(100, 116, 139, 0.1);
+      color: var(--text-secondary);
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .kpi-card {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 1.5rem 1rem;
+      border-radius: var(--border-radius);
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+
+    .kpi-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--background-color);
+      padding: 0.5rem 0 1rem;
+      margin: -0.5rem -1rem 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .search-input {
+      border: 2px solid #e2e8f0;
+      border-radius: 25px;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      background: var(--surface-color);
+      font-size: 1rem;
+      width: 100%;
+      position: relative;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      z-index: 10;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    .empty-state h6 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+
+    /* Action Buttons */
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .action-btn:active {
+      transform: scale(0.9);
+    }
+
+    .action-btn-primary {
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary-color);
+    }
+
+    .action-btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger-color);
+    }
+
+    /* Modal Enhancements */
+    .modal-content {
+      border-radius: var(--border-radius);
+      border: none;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .modal-header {
+      background: var(--primary-gradient);
+      color: white;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      border-bottom: none;
+      padding: 1.5rem;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.5s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Hidden class for tab content */
+    .tab-content > .tab-pane {
+      display: none;
+    }
+
+    .tab-content > .tab-pane.active {
+      display: block;
+    }
+
+    /* Loading states */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .loading::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid var(--primary-color);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Toast Notifications */
+    .toast {
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .mobile-container {
+        padding: 0.75rem;
+      }
+      
+      .kpi-value {
+        font-size: 1.25rem;
+      }
+      
+      .mobile-card-header,
+      .mobile-card-body {
+        padding: 0.75rem;
+      }
+    }
+
+    /* Safe area adjustments for iOS */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      body {
+        padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+      }
+      
+      .bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom);
+        height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+      }
+    }
+
+    @supports (padding-top: env(safe-area-inset-top)) {
+      body {
+        padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+      }
+      
+      .mobile-header {
+        padding-top: env(safe-area-inset-top);
+        height: calc(var(--header-height) + env(safe-area-inset-top));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <h1>
+      <i class="bi bi-bank2"></i>
+      <span data-translate="appTitle">Microfinance</span>
+    </h1>
+    <div class="header-actions">
+      <button id="langToggle" class="lang-toggle" title="Change Language">
+        EN
+      </button>
+      <button id="seedBtn" class="header-btn" title="Seed Data">
+        <i class="bi bi-database-add"></i>
+      </button>
+      <button id="exportBtn" class="header-btn" title="Export Data">
+        <i class="bi bi-download"></i>
+      </button>
+      <label class="header-btn" title="Import Data">
+        <input id="importInput" type="file" accept="application/json" class="d-none" />
+        <i class="bi bi-upload"></i>
+      </label>
+      <button id="resetBtn" class="header-btn" title="Reset Data">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="mainTabContent">
+    
+    <!-- Borrowers Tab -->
+    <div class="tab-pane active" id="borrowers" role="tabpanel">
+      <div class="mobile-container">
+        <!-- Add Borrower Form -->
+        <div class="mobile-card fade-in">
+          <div class="mobile-card-header">
+            <h5>
+              <i class="bi bi-person-plus"></i>
+              <span data-translate="addBorrower">Add Borrower</span>
+            </h5>
+            <span class="step-badge" data-translate="step1">Step 1</span>
+          </div>
+          <div class="mobile-card-body">
+            <form id="borrowerForm" class="mobile-form">
+              <div class="mb-3">
+                <label class="form-label" data-translate="fullName">Full Name *</label>
+                <input class="form-control" required name="name" data-translate-placeholder="enterFullName" placeholder="Enter full name" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" data-translate="phoneNumber">Phone Number</label>
+                <input class="form-control" name="phone" data-translate-placeholder="enterPhoneNumber" placeholder="Enter phone number" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" data-translate="idProof">ID Proof</label>
+                <input class="form-control" name="idProof" data-translate-placeholder="aadhaarPanVoter" placeholder="Aadhaar / PAN / Voter ID" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" data-translate="address">Address</label>
+                <input class="form-control" name="address" data-translate-placeholder="cityState" placeholder="City, State" />
+              </div>
+              <div class="d-flex gap-2">
+                <button type="reset" class="mobile-btn mobile-btn-secondary flex-fill">
+                  <i class="bi bi-x-circle"></i>
+                  <span data-translate="clear">Clear</span>
+                </button>
+                <button type="submit" class="mobile-btn mobile-btn-primary flex-fill">
+                  <i class="bi bi-plus-circle"></i>
+                  <span data-translate="addBorrower">Add Borrower</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Borrowers List -->
+        <div class="mobile-card">
+          <div class="search-bar">
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input id="borrowerSearch" class="search-input" data-translate-placeholder="searchBorrowers" placeholder="Search borrowers..." />
+            </div>
+          </div>
+          <div class="mobile-table" id="borrowerTable"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loans Tab -->
+    <div class="tab-pane" id="loans" role="tabpanel">
+      <div class="mobile-container">
+        <!-- Issue Loan Form -->
+        <div class="mobile-card fade-in">
+          <div class="mobile-card-header">
+            <h5>
+              <i class="bi bi-briefcase"></i>
+              <span data-translate="issueLoan">Issue Loan</span>
+            </h5>
+            <span class="step-badge" data-translate="step2">Step 2</span>
+          </div>
+          <div class="mobile-card-body">
+            <form id="loanForm" class="mobile-form">
+              <div class="mb-3">
+                <label class="form-label" data-translate="selectBorrower">Select Borrower *</label>
+                <select class="form-select" required name="borrowerId" id="loanBorrowerSelect">
+                  <option value="" disabled selected data-translate="chooseBorrower">Choose borrower...</option>
+                </select>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-6">
+                  <label class="form-label" data-translate="amount">Amount (₹) *</label>
+                  <input type="number" step="0.01" class="form-control" required name="amount" placeholder="10000" />
+                </div>
+                <div class="col-6">
+                  <label class="form-label" data-translate="interest">Interest % *</label>
+                  <input type="number" step="0.01" class="form-control" required name="interest" placeholder="12" />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" data-translate="startDate">Start Date *</label>
+                <input type="date" class="form-control" required name="startDate" />
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-6">
+                  <label class="form-label" data-translate="frequency">Frequency *</label>
+                  <select class="form-select" required name="frequency">
+                    <option value="weekly" data-translate="weekly">Weekly</option>
+                    <option value="monthly" data-translate="monthly">Monthly</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="form-label" data-translate="term">Term *</label>
+                  <input type="number" class="form-control" required name="term" placeholder="12" />
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <button type="reset" class="mobile-btn mobile-btn-secondary flex-fill">
+                  <i class="bi bi-x-circle"></i>
+                  <span data-translate="clear">Clear</span>
+                </button>
+                <button type="submit" class="mobile-btn mobile-btn-primary flex-fill">
+                  <i class="bi bi-check-circle"></i>
+                  <span data-translate="issueLoan">Issue Loan</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Loans List -->
+        <div class="mobile-card">
+          <div class="search-bar">
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input id="loanSearch" class="search-input" data-translate-placeholder="searchLoans" placeholder="Search loans..." />
+            </div>
+          </div>
+          <div class="mobile-table" id="loanTable"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repayments Tab -->
+    <div class="tab-pane" id="repayments" role="tabpanel">
+      <div class="mobile-container">
+        <!-- Record Repayment Form -->
+        <div class="mobile-card fade-in">
+          <div class="mobile-card-header">
+            <h5>
+              <i class="bi bi-wallet2"></i>
+              <span data-translate="recordRepayment">Record Repayment</span>
+            </h5>
+            <span class="step-badge" data-translate="step3">Step 3</span>
+          </div>
+          <div class="mobile-card-body">
+            <form id="repaymentForm" class="mobile-form">
+              <div class="mb-3">
+                <label class="form-label" data-translate="selectLoan">Select Loan *</label>
+                <select class="form-select" required name="loanId" id="repaymentLoanSelect">
+                  <option value="" disabled selected data-translate="chooseLoan">Choose loan...</option>
+                </select>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-6">
+                  <label class="form-label" data-translate="paymentDate">Payment Date *</label>
+                  <input type="date" class="form-control" required name="paymentDate" />
+                </div>
+                <div class="col-6">
+                  <label class="form-label" data-translate="amount">Amount (₹) *</label>
+                  <input type="number" step="0.01" class="form-control" required name="amountPaid" placeholder="1000" />
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <button type="reset" class="mobile-btn mobile-btn-secondary flex-fill">
+                  <i class="bi bi-x-circle"></i>
+                  <span data-translate="clear">Clear</span>
+                </button>
+                <button type="submit" class="mobile-btn mobile-btn-primary flex-fill">
+                  <i class="bi bi-check-circle"></i>
+                  <span data-translate="addRepayment">Add Repayment</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Repayments List -->
+        <div class="mobile-card">
+          <div class="search-bar">
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input id="repaymentSearch" class="search-input" data-translate-placeholder="searchRepayments" placeholder="Search repayments..." />
+            </div>
+          </div>
+          <div class="mobile-table" id="repaymentTable"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Tab -->
+    <div class="tab-pane" id="reports" role="tabpanel">
+      <div class="mobile-container">
+        <!-- KPI Cards -->
+        <div class="kpi-grid mb-4">
+          <div class="kpi-card bounce-in" style="animation-delay: 0.1s;">
+            <div class="kpi-icon">
+              <i class="bi bi-cash-stack"></i>
+            </div>
+            <div class="kpi-value" id="kpiDisbursed">₹0</div>
+            <div class="kpi-label" data-translate="disbursed">Disbursed</div>
+          </div>
+          <div class="kpi-card bounce-in" style="animation-delay: 0.2s;">
+            <div class="kpi-icon">
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <div class="kpi-value" id="kpiOutstanding">₹0</div>
+            <div class="kpi-label" data-translate="outstanding">Outstanding</div>
+          </div>
+        </div>
+
+        <!-- Loan Ledger -->
+        <div class="mobile-card">
+          <div class="mobile-card-header">
+            <h5>
+              <i class="bi bi-table"></i>
+              <span data-translate="loanLedger">Loan Ledger</span>
+            </h5>
+          </div>
+          <div class="search-bar">
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input id="reportSearch" class="search-input" data-translate-placeholder="searchBorrower" placeholder="Search borrower..." />
+            </div>
+          </div>
+          <div class="mobile-table" id="reportTable"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-tab="borrowers">
+      <i class="bi bi-people"></i>
+      <span data-translate="borrowers">Borrowers</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="loans">
+      <i class="bi bi-briefcase"></i>
+      <span data-translate="loans">Loans</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="repayments">
+      <i class="bi bi-wallet2"></i>
+      <span data-translate="payments">Payments</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="reports">
+      <i class="bi bi-graph-up"></i>
+      <span data-translate="reports">Reports</span>
+    </a>
+  </nav>
+
+  <!-- Borrower History Modal -->
+  <div class="modal fade" id="borrowerHistoryModal" tabindex="-1" aria-labelledby="borrowerHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-sm-down modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="borrowerHistoryModalLabel">
+            <i class="bi bi-person-circle me-2"></i>
+            <span id="borrowerHistoryName" data-translate="borrowerHistory">Borrower History</span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Borrower Summary -->
+          <div class="kpi-grid mb-4" id="borrowerSummary">
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <i class="bi bi-briefcase"></i>
+              </div>
+              <div class="kpi-value" id="totalLoans">0</div>
+              <div class="kpi-label" data-translate="totalLoans">Total Loans</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <i class="bi bi-cash-stack"></i>
+              </div>
+              <div class="kpi-value" id="totalBorrowed">₹0</div>
+              <div class="kpi-label" data-translate="borrowed">Borrowed</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="kpi-value" id="totalRepaid">₹0</div>
+              <div class="kpi-label" data-translate="repaid">Repaid</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+              </div>
+              <div class="kpi-value" id="totalOutstandingBorrower">₹0</div>
+              <div class="kpi-label" data-translate="outstanding">Outstanding</div>
+            </div>
+          </div>
+
+          <!-- Active Loans -->
+          <div class="mobile-card mb-4">
+            <div class="mobile-card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-list-ul me-2"></i>
+                <span data-translate="activeLoans">Active Loans</span>
+              </h6>
+            </div>
+            <div class="mobile-table" id="borrowerLoansTable"></div>
+          </div>
+
+          <!-- Repayment History -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-clock-history me-2"></i>
+                <span data-translate="repaymentHistory">Repayment History</span>
+              </h6>
+            </div>
+            <div class="search-bar">
+              <div class="search-wrapper">
+                <i class="bi bi-search search-icon"></i>
+                <input id="historySearch" class="search-input" data-translate-placeholder="searchPayments" placeholder="Search payments..." />
+              </div>
+            </div>
+            <div class="mobile-table" id="borrowerRepaymentTable"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="mobile-btn mobile-btn-primary" onclick="exportBorrowerHistory()">
+            <i class="bi bi-download"></i>
+            <span data-translate="exportHistory">Export History</span>
+          </button>
+          <button type="button" class="mobile-btn mobile-btn-secondary" data-bs-dismiss="modal" data-translate="close">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    let currentBorrowerId = null;
+    let currentLanguage = 'en';
+
+    // --- Translations ---
+    const translations = {
+      en: {
+        appTitle: 'Microfinance',
+        addBorrower: 'Add Borrower',
+        issueLoan: 'Issue Loan',
+        recordRepayment: 'Record Repayment',
+        borrowers: 'Borrowers',
+        loans: 'Loans',
+        payments: 'Payments',
+        reports: 'Reports',
+        step1: 'Step 1',
+        step2: 'Step 2',
+        step3: 'Step 3',
+        fullName: 'Full Name *',
+        phoneNumber: 'Phone Number',
+        idProof: 'ID Proof',
+        address: 'Address',
+        clear: 'Clear',
+        selectBorrower: 'Select Borrower *',
+        chooseBorrower: 'Choose borrower...',
+        amount: 'Amount (₹) *',
+        interest: 'Interest % *',
+        startDate: 'Start Date *',
+        frequency: 'Frequency *',
+        weekly: 'Weekly',
+        monthly: 'Monthly',
+        term: 'Term *',
+        selectLoan: 'Select Loan *',
+        chooseLoan: 'Choose loan...',
+        paymentDate: 'Payment Date *',
+        addRepayment: 'Add Repayment',
+        disbursed: 'Disbursed',
+        outstanding: 'Outstanding',
+        loanLedger: 'Loan Ledger',
+        borrowerHistory: 'Borrower History',
+        totalLoans: 'Total Loans',
+        borrowed: 'Borrowed',
+        repaid: 'Repaid',
+        activeLoans: 'Active Loans',
+        repaymentHistory: 'Repayment History',
+        exportHistory: 'Export History',
+        close: 'Close',
+        enterFullName: 'Enter full name',
+        enterPhoneNumber: 'Enter phone number',
+        aadhaarPanVoter: 'Aadhaar / PAN / Voter ID',
+        cityState: 'City, State',
+        searchBorrowers: 'Search borrowers...',
+        searchLoans: 'Search loans...',
+        searchRepayments: 'Search repayments...',
+        searchBorrower: 'Search borrower...',
+        searchPayments: 'Search payments...',
+        noBorrowersFound: 'No Borrowers Found',
+        addFirstBorrower: 'Add your first borrower to get started.',
+        noBorrowersMatch: 'No borrowers match your search.',
+        noLoansFound: 'No Loans Found',
+        issueFirstLoan: 'Issue your first loan to get started.',
+        noLoansMatch: 'No loans match your search.',
+        noRepaymentsFound: 'No Repayments Found',
+        recordFirstRepayment: 'Record your first repayment to get started.',
+        noRepaymentsMatch: 'No repayments match your search.',
+        noLoanRecordsFound: 'No Loan Records Found',
+        noLoansToReport: 'No loans to report yet.',
+        noLoansFoundBorrower: 'No Loans Found',
+        noBorrowerLoans: "This borrower hasn't taken any loans yet.",
+        noRepaymentsFoundBorrower: 'No Repayments Found',
+        noRepaymentsRecorded: 'No repayments recorded yet.',
+        paid: 'Paid',
+        active: 'Active',
+        balance: 'Balance',
+        payment: 'Payment',
+        loanHash: 'Loan #',
+        paymentFor: 'Payment for',
+        unknown: 'Unknown',
+        noPhone: 'No phone',
+        paymentOn: 'Payment on'
+      },
+      te: {
+        appTitle: 'సూక్ష్మ ఋణాలు',
+        addBorrower: 'రుణగ్రహీతను జోడించు',
+        issueLoan: 'రుణం ఇవ్వు',
+        recordRepayment: 'తిరిగి చెల్లింపు నమోదు',
+        borrowers: 'రుణగ్రహీతలు',
+        loans: 'రుణాలు',
+        payments: 'చెల్లింపులు',
+        reports: 'నివేదికలు',
+        step1: 'దశ 1',
+        step2: 'దశ 2',
+        step3: 'దశ 3',
+        fullName: 'పూర్తి పేరు *',
+        phoneNumber: 'ఫోన్ నంబర్',
+        idProof: 'గుర్తింపు పత్రం',
+        address: 'చిరునామా',
+        clear: 'క్లియర్',
+        selectBorrower: 'రుణగ్రహీతను ఎంచుకోండి *',
+        chooseBorrower: 'రుణగ్రహీతను ఎంచుకోండి...',
+        amount: 'మొత్తం (₹) *',
+        interest: 'వడ్డీ % *',
+        startDate: 'ప్రారంభ తేదీ *',
+        frequency: 'ఫ్రీక్వెన్సీ *',
+        weekly: 'వారానికి',
+        monthly: 'నెలకు',
+        term: 'కాలం *',
+        selectLoan: 'రుణాన్ని ఎంచుకోండి *',
+        chooseLoan: 'రుణాన్ని ఎంచుకోండి...',
+        paymentDate: 'చెల్లింపు తేదీ *',
+        addRepayment: 'తిరిగి చెల్లింపు జోడించు',
+        disbursed: 'పంపిణీ చేసిన',
+        outstanding: 'మిగిలిన',
+        loanLedger: 'రుణ లెడ్జర్',
+        borrowerHistory: 'రుణగ్రహీత చరిత్ర',
+        totalLoans: 'మొత్తం రుణాలు',
+        borrowed: 'అప్పు తీసుకున్న',
+        repaid: 'తిరిగి చెల్లించిన',
+        activeLoans: 'క్రియాశీల రుణాలు',
+        repaymentHistory: 'తిరిగి చెల్లింపు చరిత్ర',
+        exportHistory: 'చరిత్రను ఎగుమతి చేయు',
+        close: 'మూసివేయు',
+        enterFullName: 'పూర్తి పేరు నమోదు చేయండి',
+        enterPhoneNumber: 'ఫోన్ నంబర్ నమోదు చేయండి',
+        aadhaarPanVoter: 'ఆధార్ / పాన్ / వోటర్ ID',
+        cityState: 'నగరం, రాష్ట్రం',
+        searchBorrowers: 'రుణగ్రహీతలను వెతకండి...',
+        searchLoans: 'రుణాలను వెతకండి...',
+        searchRepayments: 'చెల్లింపులను వెతకండి...',
+        searchBorrower: 'రుణగ్రహీతను వెతకండి...',
+        searchPayments: 'చెల్లింపులను వెతకండి...',
+        noBorrowersFound: 'రుణగ్రహీతలు కనుగొనబడలేదు',
+        addFirstBorrower: 'ప్రారంభించడానికి మీ మొదటి రుణగ్రహీతను జోడించండి.',
+        noBorrowersMatch: 'మీ వెతుకుట పదానికి సరిపోలే రుణగ్రహీతలు లేరు.',
+        noLoansFound: 'రుణాలు కనుగొనబడలేదు',
+        issueFirstLoan: 'ప్రారంభించడానికి మీ మొదటి రుణం ఇవ్వండి.',
+        noLoansMatch: 'మీ వెతుకుట పదానికి సరిపోలే రుణాలు లేవు.',
+        noRepaymentsFound: 'చెల్లింపులు కనుగొనబడలేదు',
+        recordFirstRepayment: 'ప్రారంభించడానికి మీ మొదటి చెల్లింపును నమోదు చేయండి.',
+        noRepaymentsMatch: 'మీ వెతుకుట పదానికి సరిపోలే చెల్లింపులు లేవు.',
+        noLoanRecordsFound: 'రుణ రికార్డులు కనుగొనబడలేదు',
+        noLoansToReport: 'ఇంకా నివేదించడానికి రుణాలు లేవు.',
+        noLoansFoundBorrower: 'రుణాలు కనుగొనబడలేదు',
+        noBorrowerLoans: 'ఈ రుణగ్రహీత ఇంకా రుణాలు తీసుకోలేదు.',
+        noRepaymentsFoundBorrower: 'చెల్లింపులు కనుగొనబడలేదు',
+        noRepaymentsRecorded: 'ఇంకా చెల్లింపులు నమోదు చేయబడలేదు.',
+        paid: 'చెల్లించిన',
+        active: 'క్రియాశీల',
+        balance: 'బ్యాలెన్స్',
+        payment: 'చెల్లింపు',
+        loanHash: 'రుణం #',
+        paymentFor: 'చెల్లింపు కోసం',
+        unknown: 'తెలియని',
+        noPhone: 'ఫోన్ లేదు',
+        paymentOn: 'చెల్లింపు తేదీ'
+      }
+    };
+
+    // --- Language Functions ---
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('microfinance_language', lang);
+      
+      // Update language toggle button
+      const langToggle = document.getElementById('langToggle');
+      langToggle.textContent = lang === 'en' ? 'EN' : 'తె';
+      
+      // Apply translations
+      document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.dataset.translate;
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+      
+      // Apply placeholder translations
+      document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+        const key = element.dataset.translatePlaceholder;
+        if (translations[lang] && translations[lang][key]) {
+          element.placeholder = translations[lang][key];
+        }
+      });
+      
+      // Add/remove Telugu font class
+      if (lang === 'te') {
+        document.body.classList.add('telugu-text');
+        document.documentElement.setAttribute('lang', 'te');
+      } else {
+        document.body.classList.remove('telugu-text');
+        document.documentElement.setAttribute('lang', 'en');
+      }
+      
+      // Re-render all content to apply translations
+      renderAll();
+    }
+
+    function toggleLanguage() {
+      const newLang = currentLanguage === 'en' ? 'te' : 'en';
+      setLanguage(newLang);
+    }
+
+    function t(key) {
+      return translations[currentLanguage][key] || key;
+    }
+
+    // --- Simple State Layer ---
+    const store = {
+      key: 'microfinance_mvp_v1',
+      default: { borrowers: [], loans: [], repayments: [] },
+      load() {
+        try {
+          return JSON.parse(localStorage.getItem(this.key)) || structuredClone(this.default);
+        } catch { return structuredClone(this.default); }
+      },
+      save(data) { localStorage.setItem(this.key, JSON.stringify(data)); },
+      reset() { localStorage.removeItem(this.key); },
+    };
+
+    let state = store.load();
+    const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+    // --- Helpers ---
+    const fmt = {
+      money: n => `₹${Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`,
+      date: s => s ? new Date(s).toLocaleDateString('en-IN') : '-',
+    };
+
+    const qs = sel => document.querySelector(sel);
+    const qsa = sel => Array.from(document.querySelectorAll(sel));
+
+    // --- Mobile Navigation ---
+    function initMobileNavigation() {
+      const navItems = qsa('.nav-item');
+      const tabPanes = qsa('.tab-pane');
+
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetTab = item.dataset.tab;
+          
+          // Update active nav item
+          navItems.forEach(nav => nav.classList.remove('active'));
+          item.classList.add('active');
+          
+          // Update active tab pane
+          tabPanes.forEach(pane => pane.classList.remove('active'));
+          document.getElementById(targetTab).classList.add('active');
+          
+          // Scroll to top
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          
+          // Re-render content
+          renderAll();
+        });
+      });
+    }
+
+    // --- Borrower History Functions ---
+    function showBorrowerHistory(borrowerId) {
+      currentBorrowerId = borrowerId;
+      const borrower = state.borrowers.find(b => b.id === borrowerId);
+      if (!borrower) return;
+
+      // Update modal title
+      document.getElementById('borrowerHistoryName').textContent = borrower.name;
+
+      // Calculate borrower statistics
+      const borrowerLoans = state.loans.filter(l => l.borrowerId === borrowerId);
+      const borrowerRepayments = state.repayments.filter(r => 
+        borrowerLoans.some(l => l.id === r.loanId)
+      );
+
+      const totalBorrowed = borrowerLoans.reduce((sum, l) => sum + Number(l.amount || 0), 0);
+      const totalRepaid = borrowerRepayments.reduce((sum, r) => sum + Number(r.amountPaid || 0), 0);
+      const totalOutstanding = borrowerLoans.reduce((sum, l) => sum + balanceForLoan(l), 0);
+
+      // Update summary cards
+      document.getElementById('totalLoans').textContent = borrowerLoans.length;
+      document.getElementById('totalBorrowed').textContent = fmt.money(totalBorrowed);
+      document.getElementById('totalRepaid').textContent = fmt.money(totalRepaid);
+      document.getElementById('totalOutstandingBorrower').textContent = fmt.money(totalOutstanding);
+
+      // Render borrower's loans table
+      renderBorrowerLoansTable(borrowerLoans);
+      
+      // Render borrower's repayment history
+      renderBorrowerRepaymentHistory(borrowerId);
+
+      // Show modal
+      const modal = new bootstrap.Modal(document.getElementById('borrowerHistoryModal'));
+      modal.show();
+    }
+
+    function renderBorrowerLoansTable(loans) {
+      const container = document.getElementById('borrowerLoansTable');
+      
+      if (loans.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-briefcase"></i>
+            <h6>${t('noLoansFoundBorrower')}</h6>
+            <p>${t('noBorrowerLoans')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = loans.map(l => {
+        const paid = totalPaidForLoan(l.id);
+        const balance = balanceForLoan(l);
+        const totalDue = Number(l.amount) + (Number(l.amount) * Number(l.interest) / 100);
+        const isFullyPaid = balance <= 0;
+
+        return `
+          <div class="mobile-table-item ${isFullyPaid ? 'paid' : ''}">
+            <div class="item-main">
+              <div class="item-title">${t('loanHash')}${l.id.slice(-6)}</div>
+              <div class="item-subtitle">${fmt.money(l.amount)} @ ${l.interest}%</div>
+              <div class="item-meta">
+                <span class="mobile-badge mobile-badge-secondary">${fmt.date(l.startDate)}</span>
+                <span class="mobile-badge mobile-badge-primary">${l.term} ${t(l.frequency)}</span>
+                <span class="mobile-badge ${isFullyPaid ? 'mobile-badge-success' : 'mobile-badge-warning'}">
+                  ${isFullyPaid ? t('paid') : t('active')}
+                </span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <div class="text-end">
+                <div class="fw-bold text-success">${t('paid')}: ${fmt.money(paid)}</div>
+                <div class="fw-bold ${isFullyPaid ? 'text-success' : 'text-danger'}">
+                  ${t('balance')}: ${fmt.money(balance)}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = items;
+    }
+
+    function renderBorrowerRepaymentHistory(borrowerId) {
+      const borrowerLoans = state.loans.filter(l => l.borrowerId === borrowerId);
+      const loanIds = borrowerLoans.map(l => l.id);
+      const repayments = state.repayments
+        .filter(r => loanIds.includes(r.loanId))
+        .sort((a, b) => new Date(b.paymentDate) - new Date(a.paymentDate));
+
+      const container = document.getElementById('borrowerRepaymentTable');
+      const q = (document.getElementById('historySearch').value || '').toLowerCase();
+      
+      const filteredRepayments = repayments.filter(r => {
+        const loan = borrowerLoans.find(l => l.id === r.loanId);
+        const searchText = `${fmt.date(r.paymentDate)} ${loan ? loan.id.slice(-6) : ''} ${r.amountPaid}`.toLowerCase();
+        return searchText.includes(q);
+      });
+
+      if (filteredRepayments.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-wallet2"></i>
+            <h6>${t('noRepaymentsFoundBorrower')}</h6>
+            <p>${q ? t('noRepaymentsMatch') : t('noRepaymentsRecorded')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = filteredRepayments.map((r, index) => {
+        const loan = borrowerLoans.find(l => l.id === r.loanId);
+        
+        // Calculate balance at time of this payment
+        const paymentsAfterThis = repayments.slice(0, index);
+        const totalPaidAfter = paymentsAfterThis
+          .filter(p => p.loanId === r.loanId)
+          .reduce((sum, p) => sum + Number(p.amountPaid || 0), 0);
+        
+        const balanceAtTime = balanceForLoan(loan) + totalPaidAfter;
+        
+        return `
+          <div class="mobile-table-item">
+            <div class="item-main">
+              <div class="item-title">${fmt.date(r.paymentDate)}</div>
+              <div class="item-subtitle">
+                ${t('paymentFor')} ${t('loanHash')}${loan ? loan.id.slice(-6) : t('unknown')}
+              </div>
+              <div class="item-meta">
+                <span class="mobile-badge mobile-badge-success">${fmt.money(r.amountPaid)}</span>
+                <span class="mobile-badge ${balanceAtTime <= 0 ? 'mobile-badge-success' : 'mobile-badge-warning'}">
+                  ${t('balance')}: ${fmt.money(balanceAtTime)}
+                </span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <div class="text-end">
+                <small class="text-muted">
+                  ${loan ? `${t('payment')} ${repayments.filter(p => p.loanId === r.loanId && new Date(p.paymentDate) <= new Date(r.paymentDate)).length}/${loan.term}` : '-'}
+                </small>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = items;
+    }
+
+    function exportBorrowerHistory() {
+      if (!currentBorrowerId) return;
+      
+      const borrower = state.borrowers.find(b => b.id === currentBorrowerId);
+      const borrowerLoans = state.loans.filter(l => l.borrowerId === currentBorrowerId);
+      const borrowerRepayments = state.repayments.filter(r => 
+        borrowerLoans.some(l => l.id === r.loanId)
+      );
+
+      const exportData = {
+        borrower: borrower,
+        loans: borrowerLoans,
+        repayments: borrowerRepayments.sort((a, b) => new Date(a.paymentDate) - new Date(b.paymentDate)),
+        summary: {
+          totalLoans: borrowerLoans.length,
+          totalBorrowed: borrowerLoans.reduce((sum, l) => sum + Number(l.amount || 0), 0),
+          totalRepaid: borrowerRepayments.reduce((sum, r) => sum + Number(r.amountPaid || 0), 0),
+          totalOutstanding: borrowerLoans.reduce((sum, l) => sum + balanceForLoan(l), 0)
+        },
+        exportDate: new Date().toISOString()
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${borrower.name.replace(/\s+/g, '-')}-history-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast(`${borrower.name}${currentLanguage === 'te' ? ' చరిత్ర విజయవంతంగా ఎగుమతి చేయబడింది!' : "'s history exported successfully!"}`, 'success');
+    }
+
+    // --- Enhanced Borrower Functions ---
+    function addBorrower(data) {
+      state.borrowers.push({ id: uid(), createdAt: new Date().toISOString(), ...data });
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'రుణగ్రహీత విజయవంతంగా జోడించబడింది!' : 'Borrower added successfully!', 'success');
+    }
+    
+    function deleteBorrower(id) {
+      const confirmMsg = currentLanguage === 'te' ? 'ఈ రుణగ్రహీతను మరియు అన్ని సంబంధిత రుణాలను తొలగించాలా?' : 'Delete this borrower and all associated loans?';
+      if (!confirm(confirmMsg)) return;
+      const loanIds = state.loans.filter(l => l.borrowerId === id).map(l => l.id);
+      state.repayments = state.repayments.filter(r => !loanIds.includes(r.loanId));
+      state.loans = state.loans.filter(l => l.borrowerId !== id);
+      state.borrowers = state.borrowers.filter(b => b.id !== id);
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'రుణగ్రహీత విజయవంతంగా తొలగించబడింది!' : 'Borrower deleted successfully!', 'success');
+    }
+
+    // --- Loans ---
+    function addLoan(data) {
+      state.loans.push({ id: uid(), createdAt: new Date().toISOString(), ...data });
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'రుణం విజయవంతంగా ఇవ్వబడింది!' : 'Loan issued successfully!', 'success');
+    }
+    
+    function deleteLoan(id) {
+      const confirmMsg = currentLanguage === 'te' ? 'ఈ రుణం మరియు అన్ని చెల్లింపులను తొలగించాలా?' : 'Delete this loan and all repayments?';
+      if (!confirm(confirmMsg)) return;
+      state.repayments = state.repayments.filter(r => r.loanId !== id);
+      state.loans = state.loans.filter(l => l.id !== id);
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'రుణం విజయవంతంగా తొలగించబడింది!' : 'Loan deleted successfully!', 'success');
+    }
+
+    // --- Repayments ---
+    function addRepayment(data) {
+      state.repayments.push({ id: uid(), createdAt: new Date().toISOString(), ...data });
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'చెల్లింపు విజయవంతంగా నమోదు చేయబడింది!' : 'Repayment recorded successfully!', 'success');
+    }
+    
+    function deleteRepayment(id) {
+      const confirmMsg = currentLanguage === 'te' ? 'ఈ చెల్లింపును తొలగించాలా?' : 'Delete this repayment?';
+      if (!confirm(confirmMsg)) return;
+      state.repayments = state.repayments.filter(r => r.id !== id);
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'చెల్లింపు విజయవంతంగా తొలగించబడింది!' : 'Repayment deleted successfully!', 'success');
+    }
+
+    // --- Calculations ---
+    function totalPaidForLoan(loanId) {
+      return state.repayments.filter(r => r.loanId === loanId).reduce((s, r) => s + Number(r.amountPaid || 0), 0);
+    }
+    
+    function balanceForLoan(loan) {
+      const principal = Number(loan.amount || 0);
+      const interestFlat = principal * (Number(loan.interest || 0) / 100);
+      const totalDue = principal + interestFlat;
+      return Math.max(totalDue - totalPaidForLoan(loan.id), 0);
+    }
+
+    // --- Toast Notifications ---
+    function showToast(message, type = 'info') {
+      const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+      const toast = document.createElement('div');
+      toast.className = `toast align-items-center text-bg-${type} border-0 show`;
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      `;
+      toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function createToastContainer() {
+      const container = document.createElement('div');
+      container.id = 'toastContainer';
+      container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+      document.body.appendChild(container);
+      return container;
+    }
+
+    // --- Renderers ---
+    function renderBorrowerOptions() {
+      const select = qs('#loanBorrowerSelect');
+      const opts = state.borrowers
+        .sort((a,b) => a.name.localeCompare(b.name))
+        .map(b => `<option value="${b.id}">${b.name}</option>`)
+        .join('');
+      select.innerHTML = `<option value="" disabled selected>${t('chooseBorrower')}</option>` + opts;
+    }
+
+    function renderLoanOptions() {
+      const select = qs('#repaymentLoanSelect');
+      const opts = state.loans
+        .map(l => {
+          const b = state.borrowers.find(b => b.id === l.borrowerId);
+          const balance = balanceForLoan(l);
+          if (balance <= 0) return ''; // Don't show fully paid loans
+          const label = `${b ? b.name : t('unknown')} — ${fmt.money(l.amount)} @ ${l.interest}% (${t('balance')}: ${fmt.money(balance)})`;
+          return `<option value="${l.id}">${label}</option>`;
+        })
+        .filter(Boolean)
+        .join('');
+      select.innerHTML = `<option value="" disabled selected>${t('chooseLoan')}</option>` + opts;
+    }
+
+    function renderBorrowersTable() {
+      const q = (qs('#borrowerSearch').value || '').toLowerCase();
+      const container = qs('#borrowerTable');
+      
+      const filteredBorrowers = state.borrowers.filter(b => 
+        [b.name, b.phone, b.address, b.idProof].join(' ').toLowerCase().includes(q)
+      );
+
+      if (filteredBorrowers.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-people"></i>
+            <h6>${t('noBorrowersFound')}</h6>
+            <p>${q ? t('noBorrowersMatch') : t('addFirstBorrower')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = filteredBorrowers.map(b => {
+        const loanCount = state.loans.filter(l => l.borrowerId === b.id).length;
+        return `
+          <div class="mobile-table-item">
+            <div class="item-main">
+              <div class="item-title" onclick="showBorrowerHistory('${b.id}')" style="color: var(--primary-color); cursor: pointer;">
+                ${b.name}
+              </div>
+              <div class="item-subtitle">${b.phone || t('noPhone')}</div>
+              <div class="item-meta">
+                <span class="mobile-badge mobile-badge-primary">${loanCount} ${t('loans').toLowerCase()}</span>
+                ${b.address ? `<span class="mobile-badge mobile-badge-secondary">${b.address}</span>` : ''}
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="action-btn action-btn-primary" onclick="showBorrowerHistory('${b.id}')" title="View History">
+                <i class="bi bi-clock-history"></i>
+              </button>
+              <button class="action-btn action-btn-danger" onclick="deleteBorrower('${b.id}')" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = items;
+    }
+
+    function renderLoansTable() {
+      const q = (qs('#loanSearch').value || '').toLowerCase();
+      const container = qs('#loanTable');
+      
+      const filteredLoans = state.loans.filter(l => {
+        const b = state.borrowers.find(b => b.id === l.borrowerId);
+        const hay = `${b?.name} ${l.amount} ${l.interest} ${l.frequency} ${l.term}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      if (filteredLoans.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-briefcase"></i>
+            <h6>${t('noLoansFound')}</h6>
+            <p>${q ? t('noLoansMatch') : t('issueFirstLoan')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = filteredLoans.map(l => {
+        const b = state.borrowers.find(b => b.id === l.borrowerId);
+        const paid = totalPaidForLoan(l.id);
+        const bal = balanceForLoan(l);
+        const isFullyPaid = bal <= 0;
+        
+        return `
+          <div class="mobile-table-item ${isFullyPaid ? 'paid' : ''}">
+            <div class="item-main">
+              <div class="item-title">${b ? b.name : t('unknown')}</div>
+              <div class="item-subtitle">
+                ${fmt.money(l.amount)} @ ${l.interest}% | ${t(l.frequency)} | ${l.term} ${t('term').toLowerCase()}
+              </div>
+              <div class="item-meta">
+                <span class="mobile-badge mobile-badge-secondary">${fmt.date(l.startDate)}</span>
+                <span class="mobile-badge ${isFullyPaid ? 'mobile-badge-success' : 'mobile-badge-warning'}">
+                  ${isFullyPaid ? t('paid') : t('active')}
+                </span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <div class="text-end">
+                <div class="fw-bold ${isFullyPaid ? 'text-success' : 'text-danger'}">
+                  ${t('balance')}: ${fmt.money(bal)}
+                </div>
+                <div class="small text-success">${t('paid')}: ${fmt.money(paid)}</div>
+              </div>
+              <button class="action-btn action-btn-danger" onclick="deleteLoan('${l.id}')" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = items;
+    }
+
+    function renderRepaymentsTable() {
+      const q = (qs('#repaymentSearch').value || '').toLowerCase();
+      const container = qs('#repaymentTable');
+      
+      const filteredRepayments = state.repayments
+        .filter(r => {
+          const l = state.loans.find(l => l.id === r.loanId);
+          const b = l && state.borrowers.find(b => b.id === l.borrowerId);
+          const hay = `${b?.name} ${fmt.date(r.paymentDate)} ${r.amountPaid}`.toLowerCase();
+          return hay.includes(q);
+        })
+        .sort((a, b) => new Date(b.paymentDate) - new Date(a.paymentDate));
+
+      if (filteredRepayments.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-wallet2"></i>
+            <h6>${t('noRepaymentsFound')}</h6>
+            <p>${q ? t('noRepaymentsMatch') : t('recordFirstRepayment')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = filteredRepayments.map(r => {
+        const l = state.loans.find(l => l.id === r.loanId);
+        const b = l && state.borrowers.find(b => b.id === l.borrowerId);
+        
+        return `
+          <div class="mobile-table-item">
+            <div class="item-main">
+              <div class="item-title">${b ? b.name : t('unknown')}</div>
+              <div class="item-subtitle">
+                ${t('paymentOn')} ${fmt.date(r.paymentDate)}
+              </div>
+              <div class="item-meta">
+                <span class="mobile-badge mobile-badge-success">${fmt.money(r.amountPaid)}</span>
+                <span class="mobile-badge mobile-badge-secondary">
+                  ${t('loanHash')}${l ? l.id.slice(-5) : '-'}
+                </span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="action-btn action-btn-danger" onclick="deleteRepayment('${r.id}')" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = items;
+    }
+
+    function renderKPIs() {
+      const activeBorrowers = new Set(state.loans.map(l => l.borrowerId)).size;
+      const totalDisbursed = state.loans.reduce((s, l) => s + Number(l.amount || 0), 0);
+      const totalOutstanding = state.loans.reduce((s, l) => s + balanceForLoan(l), 0);
+      
+      qs('#kpiBorrowers').textContent = activeBorrowers;
+      qs('#kpiDisbursed').textContent = fmt.money(totalDisbursed);
+      qs('#kpiOutstanding').textContent = fmt.money(totalOutstanding);
+    }
+
+    function renderReportTable() {
+      const q = (qs('#reportSearch').value || '').toLowerCase();
+      const container = qs('#reportTable');
+      
+      const filteredLoans = state.loans.filter(l => {
+        const b = state.borrowers.find(b => b.id === l.borrowerId);
+        return (b?.name || '').toLowerCase().includes(q);
+      });
+
+      if (filteredLoans.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="bi bi-table"></i>
+            <h6>${t('noLoanRecordsFound')}</h6>
+            <p>${q ? t('noLoansMatch') : t('noLoansToReport')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const items = filteredLoans.map(l => {
+        const b = state.borrowers.find(b => b.id === l.borrowerId);
+        const paid = totalPaidForLoan(l.id);
+        const bal = balanceForLoan(l);
+        const isFullyPaid = bal <= 0;
+        
+        return `
+          <div class="mobile-table-item ${isFullyPaid ? 'paid' : ''}">
+            <div class="item-main">
+              <div class="item-title">${b ? b.name : t('unknown')}</div>
+              <div class="item-subtitle">
+                ${t('loanHash')}${l.id.slice(-8)} | ${fmt.money(l.amount)}
+              </div>
+              <div class="item-meta">
+                <span class="mobile-badge mobile-badge-secondary">${fmt.date(l.startDate)}</span>
+                <span class="mobile-badge mobile-badge-primary">${l.term} ${t(l.frequency)}</span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <div class="text-end">
+                <div class="fw-bold text-success">${t('paid')}: ${fmt.money(paid)}</div>
+                <div class="fw-bold ${isFullyPaid ? 'text-success' : 'text-danger'}">
+                  ${t('balance')}: ${fmt.money(bal)}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = items;
+    }
+
+    function renderAll() {
+      renderBorrowerOptions();
+      renderLoanOptions();
+      renderBorrowersTable();
+      renderLoansTable();
+      renderRepaymentsTable();
+      renderKPIs();
+      renderReportTable();
+    }
+
+    // --- Form Handlers ---
+    qs('#borrowerForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const name = fd.get('name').trim();
+      if (!name) {
+        showToast(currentLanguage === 'te' ? 'పేరు అవసరం!' : 'Name is required!', 'danger');
+        return;
+      }
+      
+      addBorrower({
+        name,
+        phone: fd.get('phone').trim(),
+        idProof: fd.get('idProof').trim(),
+        address: fd.get('address').trim(),
+      });
+      e.target.reset();
+    });
+
+    qs('#loanForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const amount = Number(fd.get('amount'));
+      const interest = Number(fd.get('interest'));
+      const term = Number(fd.get('term'));
+      
+      if (amount <= 0) {
+        showToast(currentLanguage === 'te' ? 'మొత్తం 0 కంటే ఎక్కువ ఉండాలి!' : 'Amount must be greater than 0!', 'danger');
+        return;
+      }
+      if (interest < 0) {
+        showToast(currentLanguage === 'te' ? 'వడ్డీ రేటు ప్రతికూలంగా ఉండకూడదు!' : 'Interest rate cannot be negative!', 'danger');
+        return;
+      }
+      if (term <= 0) {
+        showToast(currentLanguage === 'te' ? 'కాలం 0 కంటే ఎక్కువ ఉండాలి!' : 'Term must be greater than 0!', 'danger');
+        return;
+      }
+      
+      addLoan({
+        borrowerId: fd.get('borrowerId'),
+        amount,
+        interest,
+        startDate: fd.get('startDate'),
+        frequency: fd.get('frequency'),
+        term,
+      });
+      e.target.reset();
+    });
+
+    qs('#repaymentForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const amount = Number(fd.get('amountPaid'));
+      
+      if (amount <= 0) {
+        showToast(currentLanguage === 'te' ? 'చెల్లింపు మొత్తం 0 కంటే ఎక్కువ ఉండాలి!' : 'Payment amount must be greater than 0!', 'danger');
+        return;
+      }
+      
+      // Check if payment exceeds remaining balance
+      const loanId = fd.get('loanId');
+      const loan = state.loans.find(l => l.id === loanId);
+      if (loan) {
+        const balance = balanceForLoan(loan);
+        if (amount > balance) {
+          const msg = currentLanguage === 'te' 
+            ? `చెల్లింపు మొత్తం (${fmt.money(amount)}) మిగిలిన బ్యాలెన్స్ (${fmt.money(balance)}) కంటే ఎక్కువ!` 
+            : `Payment amount (${fmt.money(amount)}) exceeds remaining balance (${fmt.money(balance)})!`;
+          showToast(msg, 'warning');
+          return;
+        }
+      }
+      
+      addRepayment({
+        loanId,
+        paymentDate: fd.get('paymentDate'),
+        amountPaid: amount,
+      });
+      e.target.reset();
+    });
+
+    // --- Search Event Listeners ---
+    ['#borrowerSearch', '#loanSearch', '#repaymentSearch', '#reportSearch'].forEach(sel => {
+      qs(sel).addEventListener('input', renderAll);
+    });
+
+    // History search
+    document.getElementById('historySearch').addEventListener('input', () => {
+      if (currentBorrowerId) {
+        renderBorrowerRepaymentHistory(currentBorrowerId);
+      }
+    });
+
+    // --- Header Action Handlers ---
+    qs('#resetBtn').addEventListener('click', () => {
+      const confirmMsg = currentLanguage === 'te' ? 'ఇది అన్ని డేటాను తొలగిస్తుంది. కొనసాగించాలా?' : 'This will erase all data. Continue?';
+      if (confirm(confirmMsg)) {
+        store.reset(); 
+        state = store.load(); 
+        renderAll();
+        showToast(currentLanguage === 'te' ? 'అన్ని డేటా క్లియర్ చేయబడింది!' : 'All data cleared!', 'info');
+      }
+    });
+
+    qs('#exportBtn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `microfinance-data-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast(currentLanguage === 'te' ? 'డేటా విజయవంతంగా ఎగుమతి చేయబడింది!' : 'Data exported successfully!', 'success');
+    });
+
+    qs('#importInput').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!data.borrowers || !data.loans || !data.repayments) {
+            throw new Error('Invalid data format');
+          }
+          state = data; 
+          store.save(state); 
+          renderAll();
+          showToast(currentLanguage === 'te' ? 'డేటా విజయవంతంగా దిగుమతి చేయబడింది!' : 'Data imported successfully!', 'success');
+        } catch (err) {
+          const msg = currentLanguage === 'te' ? 'దిగుమతి చేయడంలో విఫలమైంది: ' + err.message : 'Failed to import: ' + err.message;
+          showToast(msg, 'danger');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+
+    qs('#seedBtn').addEventListener('click', () => {
+      const confirmMsg = currentLanguage === 'te' ? 'నమూనా డేటా జోడించాలా?' : 'Add sample data?';
+      if (!confirm(confirmMsg)) return;
+      
+      const b1 = { 
+        id: uid(), 
+        name: 'Asha Devi', 
+        phone: '98765 12345', 
+        idProof: 'Aadhaar ****4321', 
+        address: 'Vizag, AP', 
+        createdAt: new Date().toISOString() 
+      };
+      const b2 = { 
+        id: uid(), 
+        name: 'Ravi Kumar', 
+        phone: '98765 67890', 
+        idProof: 'PAN ABCD1234E', 
+        address: 'Hyderabad, TS', 
+        createdAt: new Date().toISOString() 
+      };
+      const b3 = { 
+        id: uid(), 
+        name: 'Lakshmi Prasad', 
+        phone: '98765 11111', 
+        idProof: 'Voter ID VT123456', 
+        address: 'Chennai, TN', 
+        createdAt: new Date().toISOString() 
+      };
+      
+      const today = new Date().toISOString().slice(0,10);
+      const l1 = { 
+        id: uid(), 
+        borrowerId: b1.id, 
+        amount: 15000, 
+        interest: 10, 
+        startDate: today, 
+        frequency: 'weekly', 
+        term: 12, 
+        createdAt: new Date().toISOString() 
+      };
+      const l2 = { 
+        id: uid(), 
+        borrowerId: b2.id, 
+        amount: 25000, 
+        interest: 12, 
+        startDate: today, 
+        frequency: 'monthly', 
+        term: 8, 
+        createdAt: new Date().toISOString() 
+      };
+      const l3 = { 
+        id: uid(), 
+        borrowerId: b3.id, 
+        amount: 8000, 
+        interest: 15, 
+        startDate: today, 
+        frequency: 'weekly', 
+        term: 10, 
+        createdAt: new Date().toISOString() 
+      };
+      
+      const r1 = { 
+        id: uid(), 
+        loanId: l1.id, 
+        paymentDate: today, 
+        amountPaid: 2000, 
+        createdAt: new Date().toISOString() 
+      };
+      const r2 = { 
+        id: uid(), 
+        loanId: l2.id, 
+        paymentDate: today, 
+        amountPaid: 3500, 
+        createdAt: new Date().toISOString() 
+      };
+      
+      state.borrowers.push(b1, b2, b3); 
+      state.loans.push(l1, l2, l3); 
+      state.repayments.push(r1, r2);
+      store.save(state); 
+      renderAll();
+      showToast(currentLanguage === 'te' ? 'నమూనా డేటా జోడించబడింది!' : 'Sample data added!', 'success');
+    });
+
+    // Language Toggle Handler
+    qs('#langToggle').addEventListener('click', toggleLanguage);
+
+    // --- Set today's date as default ---
+    const today = new Date().toISOString().slice(0,10);
+    qs('#loanForm [name="startDate"]').value = today;
+    qs('#repaymentForm [name="paymentDate"]').value = today;
+
+    // --- Initialize App ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load saved language preference
+      const savedLanguage = localStorage.getItem('microfinance_language') || 'en';
+      setLanguage(savedLanguage);
+
+      initMobileNavigation();
+      renderAll();
+      
+      // Add haptic feedback simulation for mobile
+      if ('vibrate' in navigator) {
+        document.addEventListener('touchstart', (e) => {
+          if (e.target.closest('button, .nav-item, .mobile-table-item')) {
+            navigator.vibrate(10);
+          }
+        });
+      }
+      
+      // Prevent zoom on double tap
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', (e) => {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+      
+      // Add pull-to-refresh hint
+      let startY = 0;
+      let pullDistance = 0;
+      
+      document.addEventListener('touchstart', (e) => {
+        if (window.scrollY === 0) {
+          startY = e.touches[0].clientY;
+        }
+      });
+      
+      document.addEventListener('touchmove', (e) => {
+        if (window.scrollY === 0 && startY < e.touches[0].clientY) {
+          pullDistance = e.touches[0].clientY - startY;
+          if (pullDistance > 50) {
+            document.body.style.background = 'linear-gradient(to bottom, rgba(102, 126, 234, 0.1) 0%, #f8fafc 100%)';
+          }
+        }
+      });
+      
+      document.addEventListener('touchend', () => {
+        if (pullDistance > 80) {
+          renderAll();
+          showToast(currentLanguage === 'te' ? 'డేటా రిఫ్రెష్ చేయబడింది!' : 'Data refreshed!', 'info');
+        }
+        document.body.style.background = '';
+        startY = 0;
+        pullDistance = 0;
+      });
+    });
+
+    // --- Add loading states for better UX ---
+    function setLoading(element, loading = true) {
+      if (loading) {
+        element.classList.add('loading');
+      } else {
+        element.classList.remove('loading');
+      }
+    }
+
+    // --- Smooth animations for tab transitions ---
+    function switchTab(targetTab) {
+      const currentTab = document.querySelector('.tab-pane.active');
+      const newTab = document.getElementById(targetTab);
+      
+      if (currentTab === newTab) return;
+      
+      // Fade out current tab
+      currentTab.style.opacity = '0';
+      currentTab.style.transform = 'translateX(-20px)';
+      
+      setTimeout(() => {
+        currentTab.classList.remove('active');
+        newTab.classList.add('active');
+        
+        // Fade in new tab
+        newTab.style.opacity = '0';
+        newTab.style.transform = 'translateX(20px)';
+        
+        requestAnimationFrame(() => {
+          newTab.style.transition = 'all 0.3s ease';
+          newTab.style.opacity = '1';
+          newTab.style.transform = 'translateX(0)';
+          
+          currentTab.style.transition = 'all 0.3s ease';
+          currentTab.style.opacity = '1';
+          currentTab.style.transform = 'translateX(0)';
+        });
+      }, 150);
+    }
+
+    // Global error handler
+    window.addEventListener('error', (e) => {
+      console.error('App error:', e.error);
+      const errorMsg = currentLanguage === 'te' ? 'ఏదో తప్పు జరిగింది. దయచేసి మళ్ళీ ప్రయత్నించండి.' : 'Something went wrong. Please try again.';
+      showToast(errorMsg, 'danger');
+    });
+
+    // Service worker registration (for PWA capabilities)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // Service worker would be registered here for offline capabilities
+        console.log('App ready for PWA enhancements');
+      });
+    }
+
+    // --- Footer message ---
+    console.log('🏦 Microfinance Mobile App with Telugu Support initialized successfully!');
+    console.log('💡 Tip: Add this app to your home screen for the best experience!');
+    console.log('🌐 Language: Toggle between English and Telugu using the language button');
+  </script>
+</body>
+</html>
